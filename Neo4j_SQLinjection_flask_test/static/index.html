@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Neo4j SQL注入例子</title>
+	</head>
+	<body>
+		<div>
+			<div>在此输入要查询属性的节点名</div>
+			<input id="nodename" type="text" placeholder="输入节点名" style="border-radius:6px;width:250px;height:20px;margin-top:10px;margin-bottom:10px;">
+			<button onclick="Search()" style="cursor:pointer;">查询</button>
+			<div>此处展示节点属性查询结果</div>
+			<div id="nodeprop" style="margin-top:10px;margin-bottom:10px;border:1px solid #4b4b4b;height:300px;width:400px;">
+				
+			</div>
+		</div>
+		<script>
+		    function Search(){
+				var formFile = new FormData();
+				formFile.append("nodename", document.getElementById("nodename").value);
+				var data = formFile;
+				$.ajax({
+					url: "/api/getattributesofnode",
+					data: data,
+					type: "POST",
+					dataType: "json",
+					cache: false,
+					processData: false,
+					contentType: false,
+					success: function (res) {
+						const t = $("div#nodeprop").empty();
+						if(res.status == "success"){
+							
+							$.each(res.resultdata,function(key,value){
+								$('<div style="width:100%;height:30px;display:flex;flex-direction:row;align-items:center"><div style="width:50%;height:100%;">'+key+'</div><div style="width:50%;height:100%;">'+value+'</div></div>').appendTo(t);
+							
+							})
+						}
+					},
+				})
+			}
+		</script>
+		<script src="/static/jquery.js"></script>
+	</body>
+	
+</html>
